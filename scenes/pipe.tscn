@@ -1,0 +1,76 @@
+[gd_scene load_steps=5 format=3 uid="uid://c3hly5fysrqfb"]
+
+[ext_resource type="Texture2D" uid="uid://clqad63cuwn1s" path="res://assets/sprites/foreground.png" id="1_8x3ej"]
+[ext_resource type="Script" uid="uid://drgn25fh5erq7" path="res://scenes/score_area.gd" id="2_arpqm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0wfyh"]
+size = Vector2(16, 72)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8x3ej"]
+size = Vector2(20, 182)
+
+[node name="Pipe" type="StaticBody2D"]
+
+[node name="BottomEnd" type="Sprite2D" parent="."]
+texture = ExtResource("1_8x3ej")
+region_enabled = true
+region_rect = Rect2(36, 0, 18, 18)
+
+[node name="BottomBulge" type="Sprite2D" parent="."]
+position = Vector2(0, 18)
+texture = ExtResource("1_8x3ej")
+region_enabled = true
+region_rect = Rect2(54, 18, 18, 18)
+
+[node name="BottomBulge2" type="Sprite2D" parent="."]
+position = Vector2(0, 54)
+texture = ExtResource("1_8x3ej")
+region_enabled = true
+region_rect = Rect2(54, 18, 18, 18)
+
+[node name="Bottom" type="Sprite2D" parent="."]
+position = Vector2(0, 36)
+texture = ExtResource("1_8x3ej")
+region_enabled = true
+region_rect = Rect2(54, 0, 18, 18)
+
+[node name="BottomCollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 28)
+shape = SubResource("RectangleShape2D_0wfyh")
+
+[node name="TopEnd" type="Sprite2D" parent="."]
+position = Vector2(0, -54)
+texture = ExtResource("1_8x3ej")
+region_enabled = true
+region_rect = Rect2(36, 18, 18, 18)
+
+[node name="TopBulge" type="Sprite2D" parent="."]
+position = Vector2(0, -108)
+texture = ExtResource("1_8x3ej")
+region_enabled = true
+region_rect = Rect2(54, 18, 18, 18)
+
+[node name="TopBulge2" type="Sprite2D" parent="."]
+position = Vector2(0, -72)
+texture = ExtResource("1_8x3ej")
+region_enabled = true
+region_rect = Rect2(54, 18, 18, 18)
+
+[node name="Top" type="Sprite2D" parent="."]
+position = Vector2(0, -90)
+texture = ExtResource("1_8x3ej")
+region_enabled = true
+region_rect = Rect2(54, 0, 18, 18)
+
+[node name="TopCollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -82)
+shape = SubResource("RectangleShape2D_0wfyh")
+
+[node name="ScoreArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("2_arpqm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ScoreArea"]
+position = Vector2(-10, -28)
+shape = SubResource("RectangleShape2D_8x3ej")

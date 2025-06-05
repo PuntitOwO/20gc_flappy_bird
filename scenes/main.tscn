@@ -1,5 +1,106 @@
-[gd_scene format=3 uid="uid://dyjb1mjdwhn4s"]
+[gd_scene load_steps=11 format=4 uid="uid://dyjb1mjdwhn4s"]
+
+[ext_resource type="Script" uid="uid://n0cpawwweh4t" path="res://scenes/pipe_generator.gd" id="1_jyhfs"]
+[ext_resource type="Texture2D" uid="uid://clqad63cuwn1s" path="res://assets/sprites/foreground.png" id="1_o5qli"]
+[ext_resource type="PackedScene" uid="uid://c3hly5fysrqfb" path="res://scenes/pipe.tscn" id="1_sugp2"]
+[ext_resource type="Script" uid="uid://cpclk3o1jyso2" path="res://scenes/main.gd" id="1_tefeu"]
+[ext_resource type="PackedScene" uid="uid://db4wj6oj4gsdl" path="res://scenes/bird.tscn" id="2_0wfyh"]
+[ext_resource type="FontFile" uid="uid://bt5r6sgdbylka" path="res://assets/fonts/kenney_blocks.ttf" id="5_tbgi4"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_o5qli"]
+distance = -38.0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0wfyh"]
+texture = ExtResource("1_o5qli")
+texture_region_size = Vector2i(18, 18)
+0:0/next_alternative_id = 2
+0:0/0 = 0
+0:0/0/terrain_set = 0
+0:0/0/terrain = 0
+0:0/0/terrains_peering_bit/right_side = 0
+0:0/0/terrains_peering_bit/bottom_right_corner = 0
+0:0/0/terrains_peering_bit/bottom_side = 0
+0:0/0/terrains_peering_bit/bottom_left_corner = 0
+0:0/0/terrains_peering_bit/left_side = 0
+1:0/0 = 0
+1:0/0/terrain_set = 0
+1:0/0/terrain = 0
+1:0/0/terrains_peering_bit/right_side = 0
+1:0/0/terrains_peering_bit/bottom_right_corner = 0
+1:0/0/terrains_peering_bit/bottom_side = 0
+1:0/0/terrains_peering_bit/bottom_left_corner = 0
+1:0/0/terrains_peering_bit/left_side = 0
+1:0/0/terrains_peering_bit/top_left_corner = 0
+1:0/0/terrains_peering_bit/top_side = 0
+1:0/0/terrains_peering_bit/top_right_corner = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+0:1/0/terrain_set = 0
+0:1/0/terrain = 0
+0:1/0/terrains_peering_bit/right_side = 0
+0:1/0/terrains_peering_bit/bottom_right_corner = 0
+0:1/0/terrains_peering_bit/bottom_side = 0
+0:1/0/terrains_peering_bit/bottom_left_corner = 0
+0:1/0/terrains_peering_bit/left_side = 0
+0:1/0/terrains_peering_bit/top_left_corner = 0
+0:1/0/terrains_peering_bit/top_side = 0
+0:1/0/terrains_peering_bit/top_right_corner = 0
+1:1/0 = 0
+1:1/0/terrain_set = 0
+1:1/0/terrain = 0
+1:1/0/terrains_peering_bit/right_side = 0
+1:1/0/terrains_peering_bit/bottom_right_corner = 0
+1:1/0/terrains_peering_bit/bottom_side = 0
+1:1/0/terrains_peering_bit/bottom_left_corner = 0
+1:1/0/terrains_peering_bit/left_side = 0
+1:1/0/terrains_peering_bit/top_left_corner = 0
+1:1/0/terrains_peering_bit/top_side = 0
+1:1/0/terrains_peering_bit/top_right_corner = 0
+2:1/0 = 0
+3:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_sugp2"]
+tile_size = Vector2i(18, 18)
+terrain_set_0/mode = 0
+terrain_set_0/terrain_0/name = "Terrain 0"
+terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
+sources/0 = SubResource("TileSetAtlasSource_0wfyh")
+
+[sub_resource type="LabelSettings" id="LabelSettings_tefeu"]
+font = ExtResource("5_tbgi4")
 
 [node name="Main" type="Node2D"]
 texture_filter = 1
 texture_repeat = 2
+script = ExtResource("1_tefeu")
+metadata/_edit_horizontal_guides_ = [38.0]
+metadata/_edit_vertical_guides_ = [144.0]
+
+[node name="PipeGenerator" type="Node2D" parent="."]
+script = ExtResource("1_jyhfs")
+pipe_scene = ExtResource("1_sugp2")
+
+[node name="Floor" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+shape = SubResource("WorldBoundaryShape2D_o5qli")
+
+[node name="FloorLayer" type="TileMapLayer" parent="Floor"]
+tile_map_data = PackedByteArray("AAD4/wIAAAAAAAAAAAD4/wMAAAABAAEAAAD5/wIAAAAAAAAAAAD5/wMAAAABAAEAAAD6/wIAAAAAAAAAAAD6/wMAAAAAAAEAAAD7/wIAAAAAAAAAAAD7/wMAAAAAAAEAAAD8/wIAAAAAAAAAAAD8/wMAAAAAAAEAAAD9/wIAAAAAAAAAAAD9/wMAAAAAAAEAAAD+/wIAAAAAAAAAAAD+/wMAAAABAAEAAAD//wIAAAAAAAAAAAD//wMAAAABAAAAAAAAAAIAAAAAAAAAAAAAAAMAAAABAAEAAAABAAIAAAAAAAAAAAABAAMAAAABAAEAAAACAAIAAAAAAAAAAAACAAMAAAABAAAAAAADAAIAAAAAAAAAAAADAAMAAAABAAAAAAAEAAIAAAAAAAAAAAAEAAMAAAABAAEAAAAFAAIAAAAAAAAAAAAFAAMAAAABAAAAAAAGAAIAAAAAAAAAAAAGAAMAAAABAAEAAAAHAAIAAAAAAAAAAAAHAAMAAAABAAAAAAD4/wQAAAABAAEAAAD5/wQAAAABAAEAAAD6/wQAAAABAAAAAAD7/wQAAAABAAEAAAD8/wQAAAABAAEAAAD9/wQAAAABAAAAAAD+/wQAAAAAAAEAAAD//wQAAAABAAEAAAAAAAQAAAAAAAEAAAABAAQAAAABAAAAAAACAAQAAAABAAEAAAADAAQAAAAAAAEAAAAEAAQAAAAAAAEAAAAFAAQAAAABAAEAAAAGAAQAAAABAAAAAAAHAAQAAAABAAAAAAA=")
+tile_set = SubResource("TileSet_sugp2")
+
+[node name="Bird" parent="." instance=ExtResource("2_0wfyh")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(4, 4)
+
+[node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(288, 0)
+offset_left = -144.0
+offset_top = -81.0
+offset_right = -104.0
+offset_bottom = -57.0
+text = "0"
+label_settings = SubResource("LabelSettings_tefeu")
+horizontal_alignment = 1
