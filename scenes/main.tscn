@@ -1,11 +1,16 @@
-[gd_scene load_steps=11 format=4 uid="uid://dyjb1mjdwhn4s"]
+[gd_scene load_steps=16 format=4 uid="uid://dyjb1mjdwhn4s"]
 
 [ext_resource type="Script" uid="uid://n0cpawwweh4t" path="res://scenes/pipe_generator.gd" id="1_jyhfs"]
 [ext_resource type="Texture2D" uid="uid://clqad63cuwn1s" path="res://assets/sprites/foreground.png" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://c3hly5fysrqfb" path="res://scenes/pipe.tscn" id="1_sugp2"]
 [ext_resource type="Script" uid="uid://cpclk3o1jyso2" path="res://scenes/main.gd" id="1_tefeu"]
 [ext_resource type="PackedScene" uid="uid://db4wj6oj4gsdl" path="res://scenes/bird.tscn" id="2_0wfyh"]
+[ext_resource type="Texture2D" uid="uid://c674aqcejlk8b" path="res://assets/sprites/background.png" id="2_o6xl0"]
 [ext_resource type="FontFile" uid="uid://bt5r6sgdbylka" path="res://assets/fonts/kenney_blocks.ttf" id="5_tbgi4"]
+[ext_resource type="Texture2D" uid="uid://bqb2ithnynoyr" path="res://assets/sprites/ui.png" id="8_tipki"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_o6xl0"]
+normal = Vector2(0, 1)
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_o5qli"]
 distance = -38.0
@@ -69,38 +74,234 @@ sources/0 = SubResource("TileSetAtlasSource_0wfyh")
 
 [sub_resource type="LabelSettings" id="LabelSettings_tefeu"]
 font = ExtResource("5_tbgi4")
+font_color = Color(0.447059, 0.447059, 0.447059, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_tipki"]
+font = ExtResource("5_tbgi4")
+
+[sub_resource type="LabelSettings" id="LabelSettings_85g3d"]
+font = ExtResource("5_tbgi4")
 
 [node name="Main" type="Node2D"]
+process_mode = 3
 texture_filter = 1
 texture_repeat = 2
 script = ExtResource("1_tefeu")
-metadata/_edit_horizontal_guides_ = [38.0]
-metadata/_edit_vertical_guides_ = [144.0]
+spawn_times = Dictionary[int, float]({
+0: 2.0,
+1: 1.5,
+2: 1.25,
+3: 0.9
+})
+background_colors = Dictionary[int, Color]({
+0: Color(1, 1, 1, 1),
+1: Color(0.999999, 0.579954, 0.6233, 1),
+2: Color(1, 0.392157, 0.368627, 1),
+3: Color(0.596078, 0, 0, 1)
+})
+metadata/_edit_vertical_guides_ = [288.0, 576.0]
+
+[node name="ParallaxBackground" type="CanvasLayer" parent="."]
+process_mode = 1
+layer = -1
+
+[node name="Sky" type="Sprite2D" parent="ParallaxBackground"]
+scale = Vector2(2, 2)
+texture = ExtResource("2_o6xl0")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 192, 72)
+
+[node name="Clouds" type="Parallax2D" parent="ParallaxBackground"]
+texture_filter = 1
+repeat_size = Vector2(192, 0)
+autoscroll = Vector2(-10, 0)
+follow_viewport = false
+ignore_camera_scroll = true
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Clouds"]
+scale = Vector2(2, 2)
+texture = ExtResource("2_o6xl0")
+centered = false
+region_enabled = true
+region_rect = Rect2(192, 0, 192, 72)
+
+[node name="Landscape" type="Parallax2D" parent="ParallaxBackground"]
+texture_filter = 1
+repeat_size = Vector2(192, 0)
+autoscroll = Vector2(-30, 0)
+follow_viewport = false
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Landscape"]
+scale = Vector2(2, 2)
+texture = ExtResource("2_o6xl0")
+centered = false
+region_enabled = true
+region_rect = Rect2(384, 0, 192, 72)
 
 [node name="PipeGenerator" type="Node2D" parent="."]
+process_mode = 1
+position = Vector2(144, 81)
 script = ExtResource("1_jyhfs")
 pipe_scene = ExtResource("1_sugp2")
 
+[node name="Sky" type="StaticBody2D" parent="."]
+process_mode = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sky"]
+shape = SubResource("WorldBoundaryShape2D_o6xl0")
+
 [node name="Floor" type="StaticBody2D" parent="."]
+process_mode = 1
+position = Vector2(144, 81)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
 shape = SubResource("WorldBoundaryShape2D_o5qli")
 
-[node name="FloorLayer" type="TileMapLayer" parent="Floor"]
-tile_map_data = PackedByteArray("AAD4/wIAAAAAAAAAAAD4/wMAAAABAAEAAAD5/wIAAAAAAAAAAAD5/wMAAAABAAEAAAD6/wIAAAAAAAAAAAD6/wMAAAAAAAEAAAD7/wIAAAAAAAAAAAD7/wMAAAAAAAEAAAD8/wIAAAAAAAAAAAD8/wMAAAAAAAEAAAD9/wIAAAAAAAAAAAD9/wMAAAAAAAEAAAD+/wIAAAAAAAAAAAD+/wMAAAABAAEAAAD//wIAAAAAAAAAAAD//wMAAAABAAAAAAAAAAIAAAAAAAAAAAAAAAMAAAABAAEAAAABAAIAAAAAAAAAAAABAAMAAAABAAEAAAACAAIAAAAAAAAAAAACAAMAAAABAAAAAAADAAIAAAAAAAAAAAADAAMAAAABAAAAAAAEAAIAAAAAAAAAAAAEAAMAAAABAAEAAAAFAAIAAAAAAAAAAAAFAAMAAAABAAAAAAAGAAIAAAAAAAAAAAAGAAMAAAABAAEAAAAHAAIAAAAAAAAAAAAHAAMAAAABAAAAAAD4/wQAAAABAAEAAAD5/wQAAAABAAEAAAD6/wQAAAABAAAAAAD7/wQAAAABAAEAAAD8/wQAAAABAAEAAAD9/wQAAAABAAAAAAD+/wQAAAAAAAEAAAD//wQAAAABAAEAAAAAAAQAAAAAAAEAAAABAAQAAAABAAAAAAACAAQAAAABAAEAAAADAAQAAAAAAAEAAAAEAAQAAAAAAAEAAAAFAAQAAAABAAEAAAAGAAQAAAABAAAAAAAHAAQAAAABAAAAAAA=")
+[node name="Parallax2D" type="Parallax2D" parent="Floor"]
+repeat_size = Vector2(576, 0)
+autoscroll = Vector2(-50, 0)
+
+[node name="FloorLayer" type="TileMapLayer" parent="Floor/Parallax2D"]
+tile_map_data = PackedByteArray("AAD4/wIAAAAAAAAAAAD4/wMAAAABAAEAAAD5/wIAAAAAAAAAAAD5/wMAAAABAAAAAAD6/wIAAAAAAAAAAAD6/wMAAAAAAAEAAAD7/wIAAAAAAAAAAAD7/wMAAAABAAEAAAD8/wIAAAAAAAAAAAD8/wMAAAABAAEAAAD9/wIAAAAAAAAAAAD9/wMAAAABAAAAAAD+/wIAAAAAAAAAAAD+/wMAAAAAAAEAAAD//wIAAAAAAAAAAAD//wMAAAAAAAEAAAAAAAIAAAAAAAAAAAAAAAMAAAABAAEAAAABAAIAAAAAAAAAAAABAAMAAAABAAAAAAACAAIAAAAAAAAAAAACAAMAAAAAAAEAAAADAAIAAAAAAAAAAAADAAMAAAAAAAEAAAAEAAIAAAAAAAAAAAAEAAMAAAABAAAAAAAFAAIAAAAAAAAAAAAFAAMAAAABAAAAAAAGAAIAAAAAAAAAAAAGAAMAAAABAAEAAAAHAAIAAAAAAAAAAAAHAAMAAAAAAAEAAAD4/wQAAAABAAEAAAD5/wQAAAABAAEAAAD6/wQAAAABAAAAAAD7/wQAAAABAAAAAAD8/wQAAAAAAAEAAAD9/wQAAAABAAEAAAD+/wQAAAABAAAAAAD//wQAAAABAAEAAAAAAAQAAAAAAAEAAAABAAQAAAABAAEAAAACAAQAAAAAAAEAAAADAAQAAAABAAAAAAAEAAQAAAAAAAEAAAAFAAQAAAABAAAAAAAGAAQAAAABAAAAAAAHAAQAAAABAAAAAAAKAAMAAAAAAAEAAAAJAAMAAAABAAEAAAAIAAMAAAAAAAEAAAAIAAQAAAABAAEAAAAJAAQAAAABAAEAAAAKAAQAAAABAAAAAAALAAQAAAAAAAEAAAAMAAQAAAABAAEAAAANAAQAAAABAAAAAAAPAAQAAAAAAAEAAAAQAAQAAAAAAAEAAAARAAQAAAABAAAAAAASAAQAAAABAAEAAAATAAQAAAABAAEAAAAUAAQAAAABAAEAAAAVAAQAAAAAAAEAAAAVAAMAAAAAAAEAAAAWAAMAAAAAAAEAAAAXAAMAAAABAAEAAAAXAAQAAAABAAEAAAAWAAQAAAABAAAAAAANAAMAAAABAAAAAAAMAAMAAAAAAAEAAAALAAMAAAABAAEAAAAOAAMAAAAAAAEAAAAPAAMAAAABAAAAAAAQAAMAAAABAAEAAAARAAMAAAABAAEAAAASAAMAAAAAAAEAAAATAAMAAAABAAEAAAAUAAMAAAABAAEAAAAOAAQAAAABAAAAAAAIAAIAAAAAAAAAAAAJAAIAAAAAAAAAAAAKAAIAAAAAAAAAAAALAAIAAAAAAAAAAAAMAAIAAAAAAAAAAAANAAIAAAAAAAAAAAAOAAIAAAAAAAAAAAAPAAIAAAAAAAAAAAAQAAIAAAAAAAAAAAARAAIAAAAAAAAAAAASAAIAAAAAAAAAAAATAAIAAAAAAAAAAAAUAAIAAAAAAAAAAAAVAAIAAAAAAAAAAAAWAAIAAAAAAAAAAAAXAAIAAAAAAAAAAAA=")
 tile_set = SubResource("TileSet_sugp2")
 
 [node name="Bird" parent="." instance=ExtResource("2_0wfyh")]
-
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(4, 4)
+process_mode = 1
+position = Vector2(144, 81)
 
 [node name="Label" type="Label" parent="."]
+process_mode = 1
 custom_minimum_size = Vector2(288, 0)
-offset_left = -144.0
-offset_top = -81.0
-offset_right = -104.0
-offset_bottom = -57.0
+offset_right = 288.0
+offset_bottom = 24.0
 text = "0"
+label_settings = SubResource("LabelSettings_tefeu")
+horizontal_alignment = 1
+
+[node name="EndScores" type="Control" parent="."]
+visible = false
+custom_minimum_size = Vector2(288, 162)
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Scrim" type="ColorRect" parent="EndScores"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12549, 0.12549, 0.12549, 0.392157)
+
+[node name="MarginContainer" type="MarginContainer" parent="EndScores"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 24
+
+[node name="Control" type="Control" parent="EndScores/MarginContainer"]
+layout_mode = 2
+
+[node name="Container" type="NinePatchRect" parent="EndScores/MarginContainer/Control"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_right = 192.0
+offset_bottom = 114.0
+texture = ExtResource("8_tipki")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
+
+[node name="MarginContainer" type="MarginContainer" parent="EndScores/MarginContainer/Control/Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="EndScores/MarginContainer/Control/Container/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Label2" type="Label" parent="EndScores/MarginContainer/Control/Container/MarginContainer/VBoxContainer"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+text = "GAME OVER"
+label_settings = SubResource("LabelSettings_tipki")
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="EndScores/MarginContainer/Control/Container/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="EndScores/MarginContainer/Control/Container/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="EndScores/MarginContainer/Control/Container/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "SCORE"
+label_settings = SubResource("LabelSettings_tipki")
+horizontal_alignment = 1
+
+[node name="CurrentScore" type="Label" parent="EndScores/MarginContainer/Control/Container/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_85g3d")
+horizontal_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="EndScores/MarginContainer/Control/Container/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="EndScores/MarginContainer/Control/Container/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Best"
+label_settings = SubResource("LabelSettings_tipki")
+horizontal_alignment = 1
+
+[node name="BestScore" type="Label" parent="EndScores/MarginContainer/Control/Container/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_85g3d")
+horizontal_alignment = 1
+
+[node name="RetryLabel" type="RichTextLabel" parent="EndScores/MarginContainer/Control/Container/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("5_tbgi4")
+theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
+text = "[rainbow freq=1.0 sat=0.6 val=0.8 speed=0.3]R to Try Again![/rainbow]"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="StartGameLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(288, 0)
+offset_top = 45.0
+offset_right = 288.0
+offset_bottom = 69.0
+text = "Click to start"
 label_settings = SubResource("LabelSettings_tefeu")
 horizontal_alignment = 1
